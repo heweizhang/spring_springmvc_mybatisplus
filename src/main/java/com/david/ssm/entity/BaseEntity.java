@@ -1,5 +1,6 @@
 package com.david.ssm.entity;
 
+
 public class BaseEntity {
 
     private static final long serialVersionUID = 1L;

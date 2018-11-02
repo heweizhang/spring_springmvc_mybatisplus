@@ -50,6 +50,12 @@
     <!-- MP的全局策略配置 -->
     <bean id="globalConfiguration" class="com.baomidou.mybatisplus.core.config.GlobalConfig">
         <property name="refresh" value="true"></property>
+        <property name="dbConfig">
+            <bean class="com.baomidou.mybatisplus.core.config.GlobalConfig.DbConfig">
+                <!--id 自增-->
+                <property name="idType" value="AUTO"/>
+            </bean>
+        </property>
     </bean>
 
     <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
