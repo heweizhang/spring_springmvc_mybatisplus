@@ -1,7 +1,9 @@
 package com.david.ssm.controller;
 
-import com.david.ssm.HelloWorld;
-
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.david.ssm.common.Result;
+import com.david.ssm.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,19 +12,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 @Controller
 public class IndexController {
+
     protected final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     @Autowired
-    HelloWorld helloWorld;
+    UserMapper userMapper;
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     @ResponseBody
-    public String index() {
-        helloWorld.setMessage("wahaha");
-        helloWorld.getMessage();
-        logger.info("IndexController index={}", "ss");
-        return "index";
+    public Result index() {
+        IPage page = userMapper.selectPageVo(new Page(0, 2), 1);
+        return Result.success(page);
+    }
+
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @ResponseBody
+    public Result getUser() {
+        return Result.success(userMapper.selectUserById((long) 1));
     }
 }
