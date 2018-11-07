@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>已注册用户</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2>用户列表</h2>
+    <div class="row">
+        <div class="col-lg-8">
+            <br/>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <button type="button" onclick="save()" class="btn btn-default">添加</button>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>姓名</td>
+                        <td>年龄</td>
+                        <td>邮箱</td>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="list:${list}">
+                        <td th:text="${list.id}"></td>
+                        <td th:text="${list.name}"></td>
+                        <td th:text="${list.age}"></td>
+                        <td th:text="${list.email}"></td>
+                        <td>
+                            <a th:onclick="'javascript:save('+${list.id}+');'" title="编辑">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </a>
+                            <a th:onclick="'javascript:del('+${list.id}+');'" title="删除">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    function save(id) {
+        if (id == undefined || id == null || id == '') {
+            alert(id);
+        } else {
+            alert(id);
+        }
+    }
+
+    function del(id) {
+        if (id == undefined || id == null || id == '') {
+            alert("出错了！");
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/user/delete',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function (data) {
+                alert(data.msg);
+                if (data.code == 0) {
+                    setTimeout('toIndex()', 100);
+                }
+            },
+            error: function () {
+                alert("出错了，请重试");
+            }
+        });
+    }
+
+    function toIndex() {
+        window.location.href = '/user';
+    }
+</script>
+</body>
+</html>
