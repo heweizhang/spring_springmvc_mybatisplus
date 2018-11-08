@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,7 +31,7 @@ public class UserController extends BaseController {
         return "user";
     }
 
-    @RequestMapping(value = "/user/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/delete", method = RequestMethod.DELETE)
     @ResponseBody
     public Result user(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         closeSession(response, session);
@@ -48,5 +47,35 @@ public class UserController extends BaseController {
             return Result.error(-1, e.toString());
         }
         return flag ? Result.success() : Result.error(-1, "删除失败请稍后重试");
+    }
+
+    @RequestMapping(value = "/user/presave", method = RequestMethod.GET)
+    public String preSave(Model model, String id) {
+        if (StringUtils.isEmpty(id)) {
+            model.addAttribute("title", "新增");
+        } else {
+            User user = userService.getById(Long.parseLong(id));
+            model.addAttribute("title", "编辑");
+            model.addAttribute("user", user);
+        }
+        return "/save";
+    }
+
+    @RequestMapping(value = "/user/save", method = RequestMethod.POST)
+    @ResponseBody
+    public Result save(User user) {
+        if (user == null) {
+            return Result.error(-1, "异常操作，请重试！");
+        }
+        try {
+            Long id = user.getId();
+            if (id == null) {//新增用户
+                return userService.save(user) ? Result.success() : Result.error(-1,"添加失败");
+            } else {//编辑用户
+                return userService.updateById(user) ? Result.success() : Result.error(-1,"添加失败");
+            }
+        } catch (RuntimeException e) {
+            return Result.error(-1, e.getMessage());
+        }
     }
 }

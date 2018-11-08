@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>保存信息</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2><span th:text="${title}"></span>用户</h2>
+    </br>
+    <div class="row">
+        <div class="col-lg-8">
+            <form id="form" role="form">
+                <input id="id" name="id" th:value="${user?.id}" hidden>
+                <div class="form-group">
+                    <label for="name">姓名</label>
+                    <input type="text" class="form-control" id="name" name="name" th:value="${user?.name}"
+                           placeholder="请输入姓名">
+                </div>
+                <div class="form-group">
+                    <label for="age">年龄</label>
+                    <input type="text" class="form-control" id="age" name="age" th:value="${user?.age}"
+                           placeholder="请输入年龄">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" th:value="${user?.email}"
+                           placeholder="请输入邮箱">
+                </div>
+                <button type="button" onclick="save()" class="btn btn-default">保存</button>
+                <button type="reset" class="btn btn-default">取消</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function save() {
+        $.ajax({
+            type: 'POST',
+            url: '/user/save',
+            data: $('#form').serialize(),
+            dataType: 'json',
+            success: function (data) {
+                alert(data.msg);
+                if (data.code == 0) {
+                    setTimeout(window.location.href = '/user', 100);
+                }
+            },
+            error: function () {
+                alert("出错了,请重试!");
+            }
+        })
+    }
+</script>
+</body>
+</html>

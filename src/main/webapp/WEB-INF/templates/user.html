@@ -51,9 +51,9 @@
 <script th:inline="javascript">
     function save(id) {
         if (id == undefined || id == null || id == '') {
-            alert(id);
+            window.location.href = '/user/presave';
         } else {
-            alert(id);
+            window.location.href = '/user/presave?id=' + id;
         }
     }
 
@@ -63,8 +63,8 @@
         }
 
         $.ajax({
-            type: 'POST',
-            url: '/user/delete',
+            type: 'DELETE',
+            url: '/user/delete?id=' + id,
             data: {
                 id: id
             },
@@ -72,17 +72,13 @@
             success: function (data) {
                 alert(data.msg);
                 if (data.code == 0) {
-                    setTimeout('toIndex()', 100);
+                    setTimeout(window.location.href = '/user', 100);
                 }
             },
             error: function () {
                 alert("出错了，请重试");
             }
         });
-    }
-
-    function toIndex() {
-        window.location.href = '/user';
     }
 </script>
 </body>
