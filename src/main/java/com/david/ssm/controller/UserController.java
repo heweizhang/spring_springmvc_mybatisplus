@@ -40,7 +40,7 @@ public class UserController extends BaseController {
         if (StringUtils.isEmpty(id)) {
             return Result.error("id不能为空");
         }
-        boolean flag = false;
+        boolean flag;
         try {
             flag = userService.removeById(Long.parseLong(id));
         } catch (RuntimeException e) {
